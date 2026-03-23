@@ -1,0 +1,28 @@
+# WordPress Document Manager
+
+A WordPress plugin that displays documents in a modern card layout with search, category filters, sorting, and download links.
+
+## Install
+
+1. Copy this folder to `wp-content/plugins/modern-document-library` (or rename the folder to match).
+2. Activate **Modern Document Library** under **Plugins**.
+3. Add documents under **Document Library** in the admin.
+4. On any page, add the **Document Library** block or shortcode: `[document_library]`
+
+## Shortcode options
+
+| Attribute | Example | Purpose |
+|-----------|---------|---------|
+| `category` | `category="accreditation"` | Limit to a category slug |
+| `limit` | `limit="10"` | Max number of documents |
+| `show_search` | `show_search="false"` | Hide search |
+| `show_filter` | `show_filter="false"` | Hide category chips |
+| `show_stats` | `show_stats="false"` | Hide hero / stats |
+
+## License
+
+GPLv2 or later. See [LICENSE](LICENSE).
+
+## Requirements
+
+WordPress 5.0+ recommended.
