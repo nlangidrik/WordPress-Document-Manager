@@ -1,0 +1,58 @@
+/* Modern Document Library - Admin Styles */
+
+.mdl-meta-field {
+    margin-bottom: 20px;
+}
+
+.mdl-meta-field label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1e1e1e;
+}
+
+.mdl-meta-field input[type="text"],
+.mdl-meta-field select {
+    width: 100%;
+    max-width: 400px;
+    padding: 8px 12px;
+    border: 1px solid #8c8f94;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.mdl-meta-field input[type="text"]:focus,
+.mdl-meta-field select:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    outline: none;
+}
+
+.mdl-file-preview {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #f0f0f1;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-top: 12px;
+}
+
+.mdl-file-preview .dashicons {
+    color: #2271b1;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+.mdl-remove-file {
+    color: #b32d2e;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+.mdl-remove-file:hover {
+    color: #8a2424;
+    text-decoration: underline;
+}
