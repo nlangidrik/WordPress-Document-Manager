@@ -1,4 +1,4 @@
-=== Modern Document Library ===
+=== PSS Document Plugin ===
 Contributors: yourname
 Tags: documents, library, file management, download, pdf
 Requires at least: 5.0
@@ -7,26 +7,27 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A modern, card-based document library with search, filtering, and sorting capabilities.
+A modern, card-based document library with search, filtering, sorting, uploads, and external links.
 
 == Description ==
 
-Modern Document Library provides a beautiful, user-friendly way to display documents on your WordPress site. Features include:
+PSS Document Plugin provides a user-friendly way to display documents on your WordPress site. Features include:
 
 * Modern card-based grid layout
 * Real-time search filtering
 * Category-based filtering
 * Multiple sorting options (newest, oldest, name)
+* Upload files or link to external URLs (e.g. Google Drive)
 * Responsive design for all devices
-* Easy document management in WordPress admin
-* Shortcode support with customizable options
+* Shortcode and block editor support with customizable options
 
 == Installation ==
 
-1. Upload the `modern-document-library` folder to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to Document Library > Add New to add your first document
-4. Use the shortcode `[document_library]` on any page or post
+1. Upload the plugin folder to the `/wp-content/plugins/` directory (main file: `pss-document-plugin.php`).
+2. Activate **PSS Document Plugin** through the **Plugins** menu in WordPress.
+3. If you previously used an older bootstrap file name, you may need to activate the plugin again once.
+4. Go to **PSS Documents** > Add New to add your first document.
+5. Use the shortcode `[document_library]` on any page or post, or add the **PSS Document Library** block.
 
 == Shortcode Usage ==
 
@@ -55,4 +56,4 @@ full legal terms.
 == Changelog ==
 
 = 1.0.0 =
-* Initial release
+* Initial release (PSS Document Plugin branding)

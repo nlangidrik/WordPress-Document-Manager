@@ -57,7 +57,12 @@
                 $.debounce(300, function () {
                     self.currentSearch = $(this).val();
                     self.filterDocuments();
-                    $('#mdl-search-clear').toggle(self.currentSearch.length > 0);
+                    var $clear = $('#mdl-search-clear');
+                    if (self.currentSearch.length > 0) {
+                        $clear.show();
+                    } else {
+                        $clear.hide();
+                    }
                 })
             );
 
@@ -197,6 +202,35 @@
         renderCard: function (doc) {
             var slug = doc.categorySlug || '';
             var safeUrl = doc.fileUrl ? String(doc.fileUrl).replace(/"/g, '&quot;') : '#';
+            var i18n =
+                typeof mdlAjax !== 'undefined' && mdlAjax.i18n
+                    ? mdlAjax.i18n
+                    : { view: 'View', download: 'Download', openLink: 'Open link' };
+            var actionsClass = doc.isExternal ? 'mdl-card-actions mdl-card-actions-external' : 'mdl-card-actions';
+            var actionsHtml;
+            if (doc.isExternal) {
+                actionsHtml =
+                    '<a href="' +
+                    safeUrl +
+                    '" target="_blank" rel="noopener noreferrer" class="mdl-btn mdl-btn-primary mdl-btn-open-link">' +
+                    '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>' +
+                    this.escapeHtml(i18n.openLink) +
+                    '</a>';
+            } else {
+                actionsHtml =
+                    '<a href="' +
+                    safeUrl +
+                    '" target="_blank" rel="noopener noreferrer" class="mdl-btn mdl-btn-outline">' +
+                    '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>' +
+                    this.escapeHtml(i18n.view) +
+                    '</a>' +
+                    '<a href="' +
+                    safeUrl +
+                    '" download class="mdl-btn mdl-btn-primary">' +
+                    '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>' +
+                    this.escapeHtml(i18n.download) +
+                    '</a>';
+            }
             return (
                 '<article class="mdl-card" data-id="' +
                 this.escapeHtml(String(doc.id)) +
@@ -225,19 +259,10 @@
                 this.escapeHtml(doc.fileSize) +
                 '</span>' +
                 '</div>' +
-                '<div class="mdl-card-actions">' +
-                '<a href="' +
-                safeUrl +
-                '" target="_blank" rel="noopener noreferrer" class="mdl-btn mdl-btn-outline">' +
-                '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>' +
-                'View' +
-                '</a>' +
-                '<a href="' +
-                safeUrl +
-                '" download class="mdl-btn mdl-btn-primary">' +
-                '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>' +
-                'Download' +
-                '</a>' +
+                '<div class="' +
+                actionsClass +
+                '">' +
+                actionsHtml +
                 '</div>' +
                 '</div>' +
                 '</article>'

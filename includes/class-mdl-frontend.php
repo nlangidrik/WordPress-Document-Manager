@@ -31,11 +31,11 @@ class MDL_Frontend {
             'modern-document-library/document-library',
             array(
                 'api_version'     => 3,
-                'title'           => __('Document Library', 'modern-document-library'),
+                'title'           => __('PSS Document Library', 'pss-document-plugin'),
                 'category'        => 'widgets',
                 'icon'            => 'media-document',
-                'description'     => __('Display the document grid with search, filters, and downloads.', 'modern-document-library'),
-                'keywords'        => array('documents', 'pdf', 'library', 'files'),
+                'description'     => __('Display the document grid with search, filters, downloads, and external links.', 'pss-document-plugin'),
+                'keywords'        => array('pss', 'documents', 'pdf', 'library', 'files'),
                 'attributes'      => array(
                     'category'   => array(
                         'type'    => 'string',
@@ -203,8 +203,16 @@ class MDL_Frontend {
 
         $initial_category = !empty($atts['category']) ? sanitize_title($atts['category']) : 'all';
 
+        $mdl_initial_json = wp_json_encode(
+            self::get_documents_data($documents),
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+        );
+        if (!is_string($mdl_initial_json)) {
+            $mdl_initial_json = '[]';
+        }
+
         ob_start();
-        include MDL_PLUGIN_DIR . 'templates/document-library.php';
+        include PSS_DOC_PLUGIN_DIR . 'templates/document-library.php';
         return ob_get_clean();
     }
 
@@ -215,18 +223,18 @@ class MDL_Frontend {
             $category      = ($terms && !is_wp_error($terms)) ? $terms[0]->name : '';
             $category_slug = ($terms && !is_wp_error($terms)) ? $terms[0]->slug : '';
 
-            $file_id = get_post_meta($doc->ID, '_mdl_file_id', true);
-            $file_url = $file_id ? wp_get_attachment_url($file_id) : '';
+            $asset = MDL_Post_Type::get_document_asset_data($doc->ID);
 
             $data[] = array(
                 'id'             => $doc->ID,
                 'title'          => $doc->post_title,
-                'category'     => $category,
-                'categorySlug' => $category_slug,
-                'year'         => get_post_meta($doc->ID, '_mdl_year', true),
-                'fileType'       => get_post_meta($doc->ID, '_mdl_file_type', true),
-                'fileSize'       => get_post_meta($doc->ID, '_mdl_file_size', true),
-                'fileUrl'        => $file_url,
+                'category'       => $category,
+                'categorySlug'   => $category_slug,
+                'year'           => get_post_meta($doc->ID, '_mdl_year', true),
+                'fileType'       => $asset['file_type'],
+                'fileSize'       => $asset['file_size'],
+                'fileUrl'        => $asset['url'],
+                'isExternal'     => $asset['is_external'],
             );
         }
         return $data;

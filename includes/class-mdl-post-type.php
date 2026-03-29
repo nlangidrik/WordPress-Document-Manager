@@ -35,17 +35,17 @@ class MDL_Post_Type {
 
     public function register_post_type() {
         $labels = array(
-            'name'               => __('Documents', 'modern-document-library'),
-            'singular_name'      => __('Document', 'modern-document-library'),
-            'add_new'            => __('Add New', 'modern-document-library'),
-            'add_new_item'       => __('Add New Document', 'modern-document-library'),
-            'edit_item'          => __('Edit Document', 'modern-document-library'),
-            'new_item'           => __('New Document', 'modern-document-library'),
-            'view_item'          => __('View Document', 'modern-document-library'),
-            'search_items'       => __('Search Documents', 'modern-document-library'),
-            'not_found'          => __('No documents found', 'modern-document-library'),
-            'not_found_in_trash' => __('No documents found in Trash', 'modern-document-library'),
-            'menu_name'          => __('Document Library', 'modern-document-library'),
+            'name'               => __('Documents', 'pss-document-plugin'),
+            'singular_name'      => __('Document', 'pss-document-plugin'),
+            'add_new'            => __('Add New', 'pss-document-plugin'),
+            'add_new_item'       => __('Add New Document', 'pss-document-plugin'),
+            'edit_item'          => __('Edit Document', 'pss-document-plugin'),
+            'new_item'           => __('New Document', 'pss-document-plugin'),
+            'view_item'          => __('View Document', 'pss-document-plugin'),
+            'search_items'       => __('Search Documents', 'pss-document-plugin'),
+            'not_found'          => __('No documents found', 'pss-document-plugin'),
+            'not_found_in_trash' => __('No documents found in Trash', 'pss-document-plugin'),
+            'menu_name'          => __('PSS Documents', 'pss-document-plugin'),
         );
 
         $args = array(
@@ -64,15 +64,15 @@ class MDL_Post_Type {
 
     public function register_taxonomy() {
         $labels = array(
-            'name'              => __('Document Categories', 'modern-document-library'),
-            'singular_name'     => __('Category', 'modern-document-library'),
-            'search_items'      => __('Search Categories', 'modern-document-library'),
-            'all_items'         => __('All Categories', 'modern-document-library'),
-            'edit_item'         => __('Edit Category', 'modern-document-library'),
-            'update_item'       => __('Update Category', 'modern-document-library'),
-            'add_new_item'      => __('Add New Category', 'modern-document-library'),
-            'new_item_name'     => __('New Category Name', 'modern-document-library'),
-            'menu_name'         => __('Categories', 'modern-document-library'),
+            'name'              => __('Document Categories', 'pss-document-plugin'),
+            'singular_name'     => __('Category', 'pss-document-plugin'),
+            'search_items'      => __('Search Categories', 'pss-document-plugin'),
+            'all_items'         => __('All Categories', 'pss-document-plugin'),
+            'edit_item'         => __('Edit Category', 'pss-document-plugin'),
+            'update_item'       => __('Update Category', 'pss-document-plugin'),
+            'add_new_item'      => __('Add New Category', 'pss-document-plugin'),
+            'new_item_name'     => __('New Category Name', 'pss-document-plugin'),
+            'menu_name'         => __('Categories', 'pss-document-plugin'),
         );
 
         $args = array(
@@ -89,7 +89,7 @@ class MDL_Post_Type {
     public function add_meta_boxes() {
         add_meta_box(
             'mdl_document_details',
-            __('Document Details', 'modern-document-library'),
+            __('Document Details', 'pss-document-plugin'),
             array($this, 'render_meta_box'),
             'mdl_document',
             'normal',
@@ -97,43 +97,143 @@ class MDL_Post_Type {
         );
     }
 
+    /**
+     * Resolved file URL, type/size labels, and whether the asset is an external link.
+     *
+     * @param int $post_id
+     * @return array{url:string,file_type:string,file_size:string,is_external:bool}
+     */
+    public static function get_document_asset_data($post_id) {
+        $post_id = (int) $post_id;
+        $source  = get_post_meta($post_id, '_mdl_source', true);
+
+        if ($source === 'url') {
+            $raw = get_post_meta($post_id, '_mdl_external_url', true);
+            $url = $raw ? esc_url($raw) : '';
+            $type = get_post_meta($post_id, '_mdl_file_type', true);
+            if ($type === '' || $type === null) {
+                $type = 'LINK';
+            }
+            $size = get_post_meta($post_id, '_mdl_file_size', true);
+            if ($size === '' || $size === null) {
+                $size = '—';
+            }
+            return array(
+                'url'           => $url,
+                'file_type'     => $type,
+                'file_size'     => $size,
+                'is_external'   => true,
+            );
+        }
+
+        $file_id  = (int) get_post_meta($post_id, '_mdl_file_id', true);
+        $file_url = $file_id ? wp_get_attachment_url($file_id) : '';
+
+        return array(
+            'url'           => $file_url ? $file_url : '',
+            'file_type'     => get_post_meta($post_id, '_mdl_file_type', true),
+            'file_size'     => get_post_meta($post_id, '_mdl_file_size', true),
+            'is_external'   => false,
+        );
+    }
+
     public function render_meta_box($post) {
         wp_nonce_field('mdl_document_meta', 'mdl_document_nonce');
 
-        $year    = get_post_meta($post->ID, '_mdl_year', true);
-        $file_id = get_post_meta($post->ID, '_mdl_file_id', true);
-        $file_url = $file_id ? wp_get_attachment_url($file_id) : '';
-        $file_name = $file_id ? basename(get_attached_file($file_id)) : '';
+        $year         = get_post_meta($post->ID, '_mdl_year', true);
+        $file_id      = (int) get_post_meta($post->ID, '_mdl_file_id', true);
+        $file_url     = $file_id ? wp_get_attachment_url($file_id) : '';
+        $file_name    = $file_id ? basename(get_attached_file($file_id)) : '';
+        $saved_source = get_post_meta($post->ID, '_mdl_source', true);
+        $external_url = get_post_meta($post->ID, '_mdl_external_url', true);
+        $url_label    = get_post_meta($post->ID, '_mdl_file_type', true);
+
+        if ($saved_source === 'url' || ($saved_source !== 'upload' && $external_url && !$file_id)) {
+            $source = 'url';
+        } else {
+            $source = 'upload';
+        }
+
+        if ($source === 'url' && ($url_label === '' || $url_label === 'LINK' || $url_label === null)) {
+            $url_type_display = '';
+        } else {
+            $url_type_display = $source === 'url' ? $url_label : '';
+        }
         ?>
+        <p class="description" style="margin-top:0;">
+            <?php _e('Use the title field above for the document name shown in the library. Assign a category in the sidebar.', 'pss-document-plugin'); ?>
+        </p>
+
         <div class="mdl-meta-field">
-            <label for="mdl_year"><?php _e('Year', 'modern-document-library'); ?></label>
-            <input type="text" id="mdl_year" name="mdl_year" value="<?php echo esc_attr($year); ?>" placeholder="<?php esc_attr_e('e.g., 2024 or 2023-2024', 'modern-document-library'); ?>">
+            <label for="mdl_year"><?php _e('Year', 'pss-document-plugin'); ?></label>
+            <input type="text" id="mdl_year" name="mdl_year" value="<?php echo esc_attr($year); ?>" placeholder="<?php esc_attr_e('e.g., 2024 or 2023-2024', 'pss-document-plugin'); ?>">
         </div>
 
         <div class="mdl-meta-field">
-            <label><?php _e('Document File', 'modern-document-library'); ?></label>
-            <input type="hidden" id="mdl_file_id" name="mdl_file_id" value="<?php echo esc_attr($file_id); ?>">
-            <button type="button" class="button" id="mdl_upload_btn">
-                <?php echo $file_id ? esc_html__('Change File', 'modern-document-library') : esc_html__('Upload File', 'modern-document-library'); ?>
-            </button>
+            <span class="mdl-meta-field-label"><?php _e('Document source', 'pss-document-plugin'); ?></span>
+            <fieldset class="mdl-source-fieldset">
+                <label class="mdl-source-option">
+                    <input type="radio" name="mdl_source" value="upload" class="mdl-source-choice" <?php checked($source, 'upload'); ?>>
+                    <?php _e('Upload a file', 'pss-document-plugin'); ?>
+                </label>
+                <label class="mdl-source-option">
+                    <input type="radio" name="mdl_source" value="url" class="mdl-source-choice" <?php checked($source, 'url'); ?>>
+                    <?php _e('Link to external file (URL)', 'pss-document-plugin'); ?>
+                </label>
+            </fieldset>
+            <p class="description"><?php _e('Use a URL for files hosted elsewhere (for example Google Drive, Dropbox, or your school website).', 'pss-document-plugin'); ?></p>
+        </div>
 
-            <?php if ($file_id && $file_url) : ?>
-            <div class="mdl-file-preview" id="mdl_file_preview">
-                <span class="dashicons dashicons-media-document"></span>
-                <span><?php echo esc_html($file_name); ?></span>
-                <a href="#" class="mdl-remove-file" id="mdl_remove_file"><?php _e('Remove', 'modern-document-library'); ?></a>
+        <div class="mdl-meta-panel" id="mdl-panel-upload" <?php echo $source === 'upload' ? '' : 'style="display:none;"'; ?>>
+            <div class="mdl-meta-field">
+                <label><?php _e('Uploaded file', 'pss-document-plugin'); ?></label>
+                <input type="hidden" id="mdl_file_id" name="mdl_file_id" value="<?php echo esc_attr($file_id); ?>">
+                <button type="button" class="button" id="mdl_upload_btn">
+                    <?php echo $file_id ? esc_html__('Change file', 'pss-document-plugin') : esc_html__('Upload file', 'pss-document-plugin'); ?>
+                </button>
+
+                <?php if ($file_id && $file_url) : ?>
+                <div class="mdl-file-preview" id="mdl_file_preview">
+                    <span class="dashicons dashicons-media-document"></span>
+                    <span><?php echo esc_html($file_name); ?></span>
+                    <a href="#" class="mdl-remove-file" id="mdl_remove_file"><?php _e('Remove', 'pss-document-plugin'); ?></a>
+                </div>
+                <?php else : ?>
+                <div class="mdl-file-preview" id="mdl_file_preview" style="display: none;">
+                    <span class="dashicons dashicons-media-document"></span>
+                    <span id="mdl_file_name"></span>
+                    <a href="#" class="mdl-remove-file" id="mdl_remove_file"><?php _e('Remove', 'pss-document-plugin'); ?></a>
+                </div>
+                <?php endif; ?>
             </div>
-            <?php else : ?>
-            <div class="mdl-file-preview" id="mdl_file_preview" style="display: none;">
-                <span class="dashicons dashicons-media-document"></span>
-                <span id="mdl_file_name"></span>
-                <a href="#" class="mdl-remove-file" id="mdl_remove_file"><?php _e('Remove', 'modern-document-library'); ?></a>
+        </div>
+
+        <div class="mdl-meta-panel" id="mdl-panel-url" <?php echo $source === 'url' ? '' : 'style="display:none;"'; ?>>
+            <div class="mdl-meta-field">
+                <label for="mdl_external_url"><?php _e('File URL', 'pss-document-plugin'); ?></label>
+                <input type="url" id="mdl_external_url" name="mdl_external_url" value="<?php echo esc_attr($external_url); ?>" class="large-text" placeholder="https://">
             </div>
-            <?php endif; ?>
+            <div class="mdl-meta-field">
+                <label for="mdl_url_file_label"><?php _e('Type label (optional)', 'pss-document-plugin'); ?></label>
+                <input type="text" id="mdl_url_file_label" name="mdl_url_file_label" value="<?php echo esc_attr($url_type_display); ?>" placeholder="<?php esc_attr_e('e.g. PDF, Google Drive, Spreadsheet', 'pss-document-plugin'); ?>">
+                <p class="description"><?php _e('Shown on the document card next to the year (defaults to “LINK” if empty).', 'pss-document-plugin'); ?></p>
+            </div>
         </div>
 
         <script>
         jQuery(function($) {
+            function mdlToggleSource() {
+                var v = $('.mdl-source-choice:checked').val();
+                if (v === 'url') {
+                    $('#mdl-panel-upload').hide();
+                    $('#mdl-panel-url').show();
+                } else {
+                    $('#mdl-panel-url').hide();
+                    $('#mdl-panel-upload').show();
+                }
+            }
+            $('.mdl-source-choice').on('change', mdlToggleSource);
+
             var mediaUploader;
             $('#mdl_upload_btn').on('click', function(e) {
                 e.preventDefault();
@@ -142,8 +242,8 @@ class MDL_Post_Type {
                     return;
                 }
                 mediaUploader = wp.media({
-                    title: <?php echo wp_json_encode(__('Select Document', 'modern-document-library')); ?>,
-                    button: { text: <?php echo wp_json_encode(__('Use this file', 'modern-document-library')); ?> },
+                    title: <?php echo wp_json_encode(__('Select document', 'pss-document-plugin')); ?>,
+                    button: { text: <?php echo wp_json_encode(__('Use this file', 'pss-document-plugin')); ?> },
                     multiple: false,
                     library: { type: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] }
                 });
@@ -152,7 +252,7 @@ class MDL_Post_Type {
                     $('#mdl_file_id').val(attachment.id);
                     $('#mdl_file_name').text(attachment.filename);
                     $('#mdl_file_preview').show();
-                    $('#mdl_upload_btn').text(<?php echo wp_json_encode(__('Change File', 'modern-document-library')); ?>);
+                    $('#mdl_upload_btn').text(<?php echo wp_json_encode(__('Change file', 'pss-document-plugin')); ?>);
                 });
                 mediaUploader.open();
             });
@@ -160,7 +260,7 @@ class MDL_Post_Type {
                 e.preventDefault();
                 $('#mdl_file_id').val('');
                 $('#mdl_file_preview').hide();
-                $('#mdl_upload_btn').text(<?php echo wp_json_encode(__('Upload File', 'modern-document-library')); ?>);
+                $('#mdl_upload_btn').text(<?php echo wp_json_encode(__('Upload file', 'pss-document-plugin')); ?>);
             });
         });
         </script>
@@ -184,6 +284,22 @@ class MDL_Post_Type {
             update_post_meta($post_id, '_mdl_year', sanitize_text_field(wp_unslash($_POST['mdl_year'])));
         }
 
+        $mdl_source = isset($_POST['mdl_source']) && $_POST['mdl_source'] === 'url' ? 'url' : 'upload';
+        update_post_meta($post_id, '_mdl_source', $mdl_source);
+
+        if ($mdl_source === 'url') {
+            update_post_meta($post_id, '_mdl_file_id', 0);
+            $ext_url = isset($_POST['mdl_external_url']) ? wp_unslash($_POST['mdl_external_url']) : '';
+            update_post_meta($post_id, '_mdl_external_url', esc_url_raw(trim($ext_url)));
+
+            $label = isset($_POST['mdl_url_file_label']) ? sanitize_text_field(wp_unslash($_POST['mdl_url_file_label'])) : '';
+            update_post_meta($post_id, '_mdl_file_type', $label !== '' ? $label : 'LINK');
+            update_post_meta($post_id, '_mdl_file_size', '—');
+            return;
+        }
+
+        delete_post_meta($post_id, '_mdl_external_url');
+
         if (isset($_POST['mdl_file_id'])) {
             $file_id = absint($_POST['mdl_file_id']);
             update_post_meta($post_id, '_mdl_file_id', $file_id);
@@ -194,6 +310,9 @@ class MDL_Post_Type {
                     update_post_meta($post_id, '_mdl_file_size', size_format(filesize($file_path)));
                     update_post_meta($post_id, '_mdl_file_type', strtoupper(pathinfo($file_path, PATHINFO_EXTENSION)));
                 }
+            } else {
+                delete_post_meta($post_id, '_mdl_file_size');
+                delete_post_meta($post_id, '_mdl_file_type');
             }
         }
     }

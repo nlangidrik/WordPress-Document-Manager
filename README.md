@@ -1,13 +1,13 @@
-# WordPress Document Manager
+# PSS Document Plugin
 
-A WordPress plugin that displays documents in a modern card layout with search, category filters, sorting, and download links.
+A WordPress plugin that displays documents in a modern card layout with search, category filters, sorting, uploads, and optional external links.
 
 ## Install
 
-1. Copy this folder to `wp-content/plugins/modern-document-library` (or rename the folder to match).
-2. Activate **Modern Document Library** under **Plugins**.
-3. Add documents under **Document Library** in the admin.
-4. On any page, add the **Document Library** block or shortcode: `[document_library]`
+1. Copy this folder to `wp-content/plugins/` (or your preferred plugins directory).
+2. Activate **PSS Document Plugin** under **Plugins** (bootstrap file: `pss-document-plugin.php`).
+3. Add documents under **PSS Documents** in the admin.
+4. On any page, add the **PSS Document Library** block or shortcode: `[document_library]`
 
 ## Shortcode options
 

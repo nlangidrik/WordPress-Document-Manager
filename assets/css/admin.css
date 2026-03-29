@@ -1,4 +1,4 @@
-/* Modern Document Library - Admin Styles */
+/* PSS Document Plugin - Admin Styles */
 
 .mdl-meta-field {
     margin-bottom: 20px;
@@ -9,6 +9,36 @@
     font-weight: 600;
     margin-bottom: 8px;
     color: #1e1e1e;
+}
+
+.mdl-meta-field-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1e1e1e;
+}
+
+.mdl-source-fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.mdl-source-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.mdl-source-option input {
+    margin: 0;
+}
+
+.mdl-meta-panel {
+    margin-top: 4px;
 }
 
 .mdl-meta-field input[type="text"],

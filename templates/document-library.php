@@ -3,18 +3,12 @@ if (!defined('ABSPATH')) {
     exit;
 }
 ?>
-<?php
-$mdl_initial_json = wp_json_encode(
-    MDL_Frontend::get_documents_data($documents),
-    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
-);
-?>
 <div
     class="mdl-wrapper"
     data-initial="<?php echo esc_attr($mdl_initial_json); ?>"
     data-initial-category="<?php echo esc_attr($initial_category); ?>"
     role="region"
-    aria-label="<?php esc_attr_e('Document library', 'modern-document-library'); ?>"
+    aria-label="<?php esc_attr_e('Document library', 'pss-document-plugin'); ?>"
 >
 
     <header class="mdl-header">
@@ -23,8 +17,8 @@ $mdl_initial_json = wp_json_encode(
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
             </div>
             <div>
-                <h1 class="mdl-title"><?php _e('Document Library', 'modern-document-library'); ?></h1>
-                <p class="mdl-subtitle"><?php _e('Browse, view, and download official documents', 'modern-document-library'); ?></p>
+                <h1 class="mdl-title"><?php _e('PSS Document Library', 'pss-document-plugin'); ?></h1>
+                <p class="mdl-subtitle"><?php _e('Browse, view, and download official documents', 'pss-document-plugin'); ?></p>
             </div>
         </div>
     </header>
@@ -32,9 +26,9 @@ $mdl_initial_json = wp_json_encode(
     <?php if ($show_stats) : ?>
     <section class="mdl-hero" aria-labelledby="mdl-hero-heading">
         <div class="mdl-hero-content">
-            <h2 id="mdl-hero-heading" class="mdl-hero-title"><?php _e('Public Resources', 'modern-document-library'); ?></h2>
+            <h2 id="mdl-hero-heading" class="mdl-hero-title"><?php _e('Public Resources', 'pss-document-plugin'); ?></h2>
             <p class="mdl-hero-description">
-                <?php _e('Access our collection of official documents including accreditation reports, annual reports, policies, and forms. All documents are available for viewing and download.', 'modern-document-library'); ?>
+                <?php _e('Access our collection of official documents including accreditation reports, annual reports, policies, and forms. All documents are available for viewing and download.', 'pss-document-plugin'); ?>
             </p>
         </div>
 
@@ -45,7 +39,7 @@ $mdl_initial_json = wp_json_encode(
                 </div>
                 <div>
                     <p class="mdl-stat-value"><?php echo esc_html($total_docs); ?>+</p>
-                    <p class="mdl-stat-label"><?php _e('Total Documents', 'modern-document-library'); ?></p>
+                    <p class="mdl-stat-label"><?php _e('Total Documents', 'pss-document-plugin'); ?></p>
                 </div>
             </div>
             <div class="mdl-stat-card">
@@ -54,7 +48,7 @@ $mdl_initial_json = wp_json_encode(
                 </div>
                 <div>
                     <p class="mdl-stat-value"><?php echo esc_html($total_categories); ?></p>
-                    <p class="mdl-stat-label"><?php _e('Categories', 'modern-document-library'); ?></p>
+                    <p class="mdl-stat-label"><?php _e('Categories', 'pss-document-plugin'); ?></p>
                 </div>
             </div>
             <?php
@@ -80,37 +74,41 @@ $mdl_initial_json = wp_json_encode(
     </section>
     <?php endif; ?>
 
-    <section class="mdl-controls" aria-label="<?php esc_attr_e('Search and sort', 'modern-document-library'); ?>">
+    <section class="mdl-controls" aria-label="<?php esc_attr_e('Search and sort', 'pss-document-plugin'); ?>">
         <?php if ($show_search) : ?>
         <div class="mdl-search">
-            <svg class="mdl-search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            <label for="mdl-search" class="screen-reader-text"><?php esc_html_e('Search documents', 'modern-document-library'); ?></label>
-            <input type="search" class="mdl-search-input" id="mdl-search" placeholder="<?php esc_attr_e('Search by title, category, or year...', 'modern-document-library'); ?>" autocomplete="off">
-            <button type="button" class="mdl-search-clear" id="mdl-search-clear" style="display: none;" aria-label="<?php esc_attr_e('Clear search', 'modern-document-library'); ?>">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-            </button>
+            <label for="mdl-search" class="screen-reader-text"><?php esc_html_e('Search documents', 'pss-document-plugin'); ?></label>
+            <div class="mdl-search-field">
+                <span class="mdl-search-icon-wrap" aria-hidden="true">
+                    <svg class="mdl-search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                </span>
+                <input type="search" class="mdl-search-input" id="mdl-search" placeholder="<?php esc_attr_e('Search by title, category, or year...', 'pss-document-plugin'); ?>" autocomplete="off">
+                <button type="button" class="mdl-search-clear" id="mdl-search-clear" style="display: none;" aria-label="<?php esc_attr_e('Clear search', 'pss-document-plugin'); ?>">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
         </div>
         <?php endif; ?>
 
         <div class="mdl-sort">
             <button type="button" class="mdl-sort-btn" id="mdl-sort-btn" aria-expanded="false" aria-haspopup="listbox" aria-controls="mdl-sort-dropdown">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
-                <span><?php _e('Sort by:', 'modern-document-library'); ?></span>
-                <span id="mdl-sort-label"><?php _e('Newest', 'modern-document-library'); ?></span>
+                <span><?php _e('Sort by:', 'pss-document-plugin'); ?></span>
+                <span id="mdl-sort-label"><?php _e('Newest', 'pss-document-plugin'); ?></span>
             </button>
-            <div class="mdl-sort-dropdown" id="mdl-sort-dropdown" role="listbox" aria-label="<?php esc_attr_e('Sort options', 'modern-document-library'); ?>">
-                <button type="button" data-sort="newest" class="active" role="option"><?php _e('Newest First', 'modern-document-library'); ?></button>
-                <button type="button" data-sort="oldest" role="option"><?php _e('Oldest First', 'modern-document-library'); ?></button>
-                <button type="button" data-sort="name" role="option"><?php _e('Name (A-Z)', 'modern-document-library'); ?></button>
+            <div class="mdl-sort-dropdown" id="mdl-sort-dropdown" role="listbox" aria-label="<?php esc_attr_e('Sort options', 'pss-document-plugin'); ?>">
+                <button type="button" data-sort="newest" class="active" role="option"><?php _e('Newest First', 'pss-document-plugin'); ?></button>
+                <button type="button" data-sort="oldest" role="option"><?php _e('Oldest First', 'pss-document-plugin'); ?></button>
+                <button type="button" data-sort="name" role="option"><?php _e('Name (A-Z)', 'pss-document-plugin'); ?></button>
             </div>
         </div>
     </section>
 
     <?php if ($show_filter) : ?>
-    <section class="mdl-filter" aria-label="<?php esc_attr_e('Filter by category', 'modern-document-library'); ?>">
+    <section class="mdl-filter" aria-label="<?php esc_attr_e('Filter by category', 'pss-document-plugin'); ?>">
         <button type="button" class="mdl-filter-btn<?php echo ($initial_category === 'all') ? ' active' : ''; ?>" data-category="all">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
-            <?php _e('All Documents', 'modern-document-library'); ?>
+            <?php _e('All Documents', 'pss-document-plugin'); ?>
             <span class="mdl-filter-count"><?php echo esc_html($total_docs); ?></span>
         </button>
         <?php foreach ($categories as $cat) : ?>
@@ -124,7 +122,7 @@ $mdl_initial_json = wp_json_encode(
 
     <div class="mdl-results">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
-        <span id="mdl-results-text"><?php printf(esc_html__('Showing %d documents', 'modern-document-library'), count($documents)); ?></span>
+        <span id="mdl-results-text"><?php printf(esc_html__('Showing %d documents', 'pss-document-plugin'), count($documents)); ?></span>
     </div>
 
     <div class="mdl-grid" id="mdl-grid">
@@ -133,11 +131,12 @@ $mdl_initial_json = wp_json_encode(
             $terms          = get_the_terms($doc->ID, 'mdl_category');
             $category       = ($terms && !is_wp_error($terms)) ? $terms[0]->name : '';
             $category_slug  = ($terms && !is_wp_error($terms)) ? $terms[0]->slug : '';
-            $file_id        = get_post_meta($doc->ID, '_mdl_file_id', true);
-            $file_url       = $file_id ? wp_get_attachment_url($file_id) : '#';
+            $asset          = MDL_Post_Type::get_document_asset_data($doc->ID);
+            $file_url       = $asset['url'] !== '' ? $asset['url'] : '#';
             $year           = get_post_meta($doc->ID, '_mdl_year', true);
-            $file_type      = get_post_meta($doc->ID, '_mdl_file_type', true);
-            $file_size      = get_post_meta($doc->ID, '_mdl_file_size', true);
+            $file_type      = $asset['file_type'];
+            $file_size      = $asset['file_size'];
+            $is_external    = $asset['is_external'];
             ?>
         <article class="mdl-card" data-id="<?php echo esc_attr($doc->ID); ?>">
             <div class="mdl-card-icon" aria-hidden="true">
@@ -156,15 +155,22 @@ $mdl_initial_json = wp_json_encode(
                         <?php echo esc_html($file_type); ?> &bull; <?php echo esc_html($file_size); ?>
                     </span>
                 </div>
-                <div class="mdl-card-actions">
+                <div class="mdl-card-actions<?php echo $is_external ? ' mdl-card-actions-external' : ''; ?>">
+                    <?php if ($is_external) : ?>
+                    <a href="<?php echo esc_url($file_url); ?>" target="_blank" rel="noopener noreferrer" class="mdl-btn mdl-btn-primary mdl-btn-open-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+                        <?php _e('Open link', 'pss-document-plugin'); ?>
+                    </a>
+                    <?php else : ?>
                     <a href="<?php echo esc_url($file_url); ?>" target="_blank" rel="noopener noreferrer" class="mdl-btn mdl-btn-outline">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-                        <?php _e('View', 'modern-document-library'); ?>
+                        <?php _e('View', 'pss-document-plugin'); ?>
                     </a>
                     <a href="<?php echo esc_url($file_url); ?>" download class="mdl-btn mdl-btn-primary">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                        <?php _e('Download', 'modern-document-library'); ?>
+                        <?php _e('Download', 'pss-document-plugin'); ?>
                     </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </article>
@@ -175,14 +181,14 @@ $mdl_initial_json = wp_json_encode(
         <div class="mdl-empty-icon" aria-hidden="true">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/><path d="M12 10v6"/><path d="m15 13-3 3-3-3"/></svg>
         </div>
-        <h3 class="mdl-empty-title"><?php _e('No documents found', 'modern-document-library'); ?></h3>
-        <p class="mdl-empty-text"><?php _e('Try a different search term or clear your filters.', 'modern-document-library'); ?></p>
-        <button type="button" class="mdl-btn mdl-btn-outline" id="mdl-clear-filters"><?php _e('Clear filters', 'modern-document-library'); ?></button>
+        <h3 class="mdl-empty-title"><?php _e('No documents found', 'pss-document-plugin'); ?></h3>
+        <p class="mdl-empty-text"><?php _e('Try a different search term or clear your filters.', 'pss-document-plugin'); ?></p>
+        <button type="button" class="mdl-btn mdl-btn-outline" id="mdl-clear-filters"><?php _e('Clear filters', 'pss-document-plugin'); ?></button>
     </div>
 
     <footer class="mdl-footer">
-        <p><?php _e('Need assistance? Contact our administrative office for help with documents.', 'modern-document-library'); ?></p>
-        <p><?php printf(esc_html__('Last updated: %s', 'modern-document-library'), esc_html(date_i18n(get_option('date_format')))); ?></p>
+        <p><?php _e('Need assistance? Contact our administrative office for help with documents.', 'pss-document-plugin'); ?></p>
+        <p><?php printf(esc_html__('Last updated: %s', 'pss-document-plugin'), esc_html(date_i18n(get_option('date_format')))); ?></p>
     </footer>
 
 </div>

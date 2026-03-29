@@ -1,28 +1,28 @@
 <?php
 /**
- * Plugin Name: Modern Document Library
- * Description: A modern, card-based document library with search, filtering, and sorting
+ * Plugin Name: PSS Document Plugin
+ * Description: A modern, card-based document library with search, filtering, sorting, uploads, and external links.
  * Version: 1.0.0
  * Author: Your Name
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: modern-document-library
+ * Text Domain: pss-document-plugin
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MDL_VERSION', '1.0.0');
-define('MDL_PLUGIN_DIR', plugin_dir_path(__FILE__));
-define('MDL_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('PSS_DOC_VERSION', '1.0.0');
+define('PSS_DOC_PLUGIN_DIR', plugin_dir_path(__FILE__));
+define('PSS_DOC_PLUGIN_URL', plugin_dir_url(__FILE__));
 
-require_once MDL_PLUGIN_DIR . 'includes/class-mdl-post-type.php';
-require_once MDL_PLUGIN_DIR . 'includes/class-mdl-admin.php';
-require_once MDL_PLUGIN_DIR . 'includes/class-mdl-frontend.php';
-require_once MDL_PLUGIN_DIR . 'includes/class-mdl-ajax.php';
+require_once PSS_DOC_PLUGIN_DIR . 'includes/class-mdl-post-type.php';
+require_once PSS_DOC_PLUGIN_DIR . 'includes/class-mdl-admin.php';
+require_once PSS_DOC_PLUGIN_DIR . 'includes/class-mdl-frontend.php';
+require_once PSS_DOC_PLUGIN_DIR . 'includes/class-mdl-ajax.php';
 
-class Modern_Document_Library {
+class PSS_Document_Plugin {
 
     private static $instance = null;
 
@@ -45,28 +45,37 @@ class Modern_Document_Library {
     }
 
     public function init() {
-        load_plugin_textdomain('modern-document-library', false, dirname(plugin_basename(__FILE__)) . '/languages');
+        load_plugin_textdomain('pss-document-plugin', false, dirname(plugin_basename(__FILE__)) . '/languages');
     }
 
     public function enqueue_frontend_assets() {
+        if (defined('REST_REQUEST') && REST_REQUEST) {
+            return;
+        }
+
         wp_enqueue_style(
             'mdl-frontend',
-            MDL_PLUGIN_URL . 'assets/css/frontend.css',
+            PSS_DOC_PLUGIN_URL . 'assets/css/frontend.css',
             array(),
-            MDL_VERSION
+            PSS_DOC_VERSION
         );
 
         wp_enqueue_script(
             'mdl-frontend',
-            MDL_PLUGIN_URL . 'assets/js/frontend.js',
-            array('jquery'),
-            MDL_VERSION,
+            PSS_DOC_PLUGIN_URL . 'assets/js/frontend.js',
+            array('jquery-core'),
+            PSS_DOC_VERSION,
             true
         );
 
         wp_localize_script('mdl-frontend', 'mdlAjax', array(
             'ajaxurl' => admin_url('admin-ajax.php'),
             'nonce'   => wp_create_nonce('mdl_nonce'),
+            'i18n'    => array(
+                'view'      => __('View', 'pss-document-plugin'),
+                'download'  => __('Download', 'pss-document-plugin'),
+                'openLink'  => __('Open link', 'pss-document-plugin'),
+            ),
         ));
     }
 
@@ -77,22 +86,22 @@ class Modern_Document_Library {
 
         wp_enqueue_style(
             'mdl-admin',
-            MDL_PLUGIN_URL . 'assets/css/admin.css',
+            PSS_DOC_PLUGIN_URL . 'assets/css/admin.css',
             array(),
-            MDL_VERSION
+            PSS_DOC_VERSION
         );
 
         wp_enqueue_script(
             'mdl-admin',
-            MDL_PLUGIN_URL . 'assets/js/admin.js',
-            array('jquery'),
-            MDL_VERSION,
+            PSS_DOC_PLUGIN_URL . 'assets/js/admin.js',
+            array('jquery-core'),
+            PSS_DOC_VERSION,
             true
         );
     }
 }
 
-Modern_Document_Library::get_instance();
+PSS_Document_Plugin::get_instance();
 
 register_activation_hook(__FILE__, function () {
     MDL_Post_Type::get_instance()->register_post_type();
